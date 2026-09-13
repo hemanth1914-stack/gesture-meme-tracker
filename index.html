@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gesture Meme Tracker</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google MediaPipe CDN Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand">
+                <span class="logo-icon">🎭</span>
+                <h1>Gesture Meme Tracker</h1>
+            </div>
+            <p class="subtitle">Strike a hand gesture to trigger its matching meme live!</p>
+        </header>
+
+        <!-- Main Video & Tracker Stage -->
+        <main class="main-stage">
+            <div class="stage-container">
+                <!-- Raw webcam video (hidden source for MediaPipe) -->
+                <video id="webcam" playsinline></video>
+
+                <!-- Mirrored Canvas for video + hand landmarks -->
+                <canvas id="output-canvas"></canvas>
+
+                <!-- Meme Display Overlay: appears when a gesture is held -->
+                <div id="meme-overlay" class="meme-overlay hidden">
+                    <div class="meme-card">
+                        <div class="meme-header">
+                            <span class="meme-badge" id="meme-badge">Gesture</span>
+                        </div>
+                        <div class="meme-image-container">
+                            <img id="meme-image" src="" alt="Gesture Meme">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Debug HUD (Corner Readout) -->
+                <div class="debug-hud" id="debug-hud">
+                    <div class="debug-header">
+                        <span class="debug-indicator" id="debug-indicator"></span>
+                        <span class="debug-title">DEBUG HUD</span>
+                        <button id="toggle-debug-btn" class="debug-toggle-btn" title="Toggle full details">▼</button>
+                    </div>
+                    <div class="debug-body" id="debug-body">
+                        <div class="debug-row">
+                            <span class="debug-label">Active Meme:</span>
+                            <span class="debug-value highlight" id="debug-active-gesture">None</span>
+                        </div>
+                        <div class="debug-row">
+                            <span class="debug-label">Raw Detected:</span>
+                            <span class="debug-value" id="debug-raw-gesture">None</span>
+                        </div>
+                        <div class="debug-row">
+                            <span class="debug-label">Stability Hold:</span>
+                            <span class="debug-value" id="debug-stability">0 / 4</span>
+                        </div>
+                        <div class="debug-row">
+                            <span class="debug-label">Hands Count:</span>
+                            <span class="debug-value" id="debug-hands-count">0</span>
+                        </div>
+                        <div class="debug-row">
+                            <span class="debug-label">Performance:</span>
+                            <span class="debug-value" id="debug-fps">-- FPS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading / Camera Permission Overlay -->
+                <div id="loading-overlay" class="loading-overlay">
+                    <div class="spinner"></div>
+                    <p id="status-text">Requesting camera access & initializing MediaPipe...</p>
+                </div>
+            </div>
+
+            <!-- Gesture Quick Reference Bar -->
+            <div class="gestures-reference">
+                <h3>Available Gestures</h3>
+                <div class="gesture-pill-grid">
+                    <div class="gesture-pill" data-gesture="pointing">
+                        <span class="pill-icon">👉</span>
+                        <span class="pill-name">pointing</span>
+                        <span class="pill-desc">1 hand, index straight</span>
+                    </div>
+                    <div class="gesture-pill" data-gesture="explosion">
+                        <span class="pill-icon">🤯</span>
+                        <span class="pill-name">explosion</span>
+                        <span class="pill-desc">2 hands beside head, open</span>
+                    </div>
+                    <div class="gesture-pill" data-gesture="shrug">
+                        <span class="pill-icon">🤷</span>
+                        <span class="pill-name">shrug</span>
+                        <span class="pill-desc">2 palms open at chest</span>
+                    </div>
+                    <div class="gesture-pill" data-gesture="namaste">
+                        <span class="pill-icon">🙏</span>
+                        <span class="pill-name">namaste</span>
+                        <span class="pill-desc">2 palms touching together</span>
+                    </div>
+                    <div class="gesture-pill" data-gesture="okboth">
+                        <span class="pill-icon">👌</span>
+                        <span class="pill-name">okboth</span>
+                        <span class="pill-desc">2 hands forming OK sign</span>
+                    </div>
+                    <div class="gesture-pill" data-gesture="earcup">
+                        <span class="pill-icon">👂</span>
+                        <span class="pill-name">earcup</span>
+                        <span class="pill-desc">1 hand cupped near ear</span>
+                    </div>
+                    <div class="gesture-pill" data-gesture="salute">
+                        <span class="pill-icon">🫡</span>
+                        <span class="pill-name">salute</span>
+                        <span class="pill-desc">1 flat hand at temple</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Application Logic -->
+    <script src="script.js"></script>
+</body>
+</html>

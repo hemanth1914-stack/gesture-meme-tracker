@@ -1,0 +1,13 @@
+{
+  "name": "gesture-tracker",
+  "version": "1.0.0",
+  "description": "Gesture Meme Tracker",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 3000",
+    "start": "python3 -m http.server 3000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
